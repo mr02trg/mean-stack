@@ -1,0 +1,23 @@
+<mat-card class="card">
+    <mat-card-header>
+        <mat-card-title>Create New Post</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="form">
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Title" formControlName="title">
+                <mat-error *ngIf="form.get('title').invalid && form.get('title').touched">Invalid Title</mat-error>
+            </mat-form-field>
+    
+            <mat-form-field class="full-width">
+                <textarea matInput placeholder="Content" rows=7 formControlName="content"></textarea>
+                <mat-error *ngIf="form.get('content').invalid && form.get('content').touched">Invalid Content</mat-error>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button mat-button type="button" (click)="addPost()" >Submit</button>
+    </mat-card-actions>
+</mat-card>
+
