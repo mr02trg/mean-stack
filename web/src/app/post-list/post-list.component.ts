@@ -21,4 +21,8 @@ export class PostListComponent implements OnInit {
     this.postService.GetPosts();
     this.subscription = this.postService.getPosts().subscribe(x => this.posts = x);
   }
+
+  delete(id: string) {
+    this.postService.DeletePost(id);
+  }
 }
