@@ -1,8 +1,9 @@
 <mat-card class="card">
-    <mat-card-header>
-        <mat-card-title>Create New Post</mat-card-title>
+    <mat-card-header class="card-header">
+        <mat-card-title>Create Post</mat-card-title>
     </mat-card-header>
-    <mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-content class="card-content">
         <form [formGroup]="form">
             <mat-form-field class="full-width">
                 <input matInput placeholder="Title" formControlName="title">

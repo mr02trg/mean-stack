@@ -13,7 +13,8 @@ import
    MatFormFieldModule,
    MatInputModule,
    MatExpansionModule,
-   MatButtonModule
+   MatButtonModule,
+   MatDividerModule
 } from '@angular/material';
 import { HeaderComponent } from './header/header.component';
 import { PostCreateComponent } from './post-create/post-create.component';
@@ -40,7 +41,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatExpansionModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

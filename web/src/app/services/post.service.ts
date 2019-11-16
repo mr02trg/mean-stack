@@ -5,13 +5,15 @@ import { map as rxMap } from 'rxjs/operators';
 import { map, remove } from 'lodash';
 
 import { IPost } from '../models/IPost';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   posts: IPost[] = [];
@@ -45,6 +47,7 @@ export class PostService {
           postData.id = res.postId;
           this.posts.push(postData);
           this.postSubject.next(this.posts);
+          this.router.navigate(['/']);
         });
   }
 
