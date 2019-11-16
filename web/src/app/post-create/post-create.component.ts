@@ -31,7 +31,7 @@ export class PostCreateComponent implements OnInit {
       return;
     }
     const data: IPost = this.form.value;
-    this.postService.addPost(data);
+    this.postService.AddPost(data);
     this.form.reset();
     this.form.markAsUntouched();
     this.form.markAsPristine();
