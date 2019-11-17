@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map as rxMap } from 'rxjs/operators';
-import { map, remove } from 'lodash';
+import { map, remove, findIndex } from 'lodash';
 
 import { IPost } from '../models/IPost';
 import { Router } from '@angular/router';
@@ -41,6 +41,18 @@ export class PostService {
         })
   }
 
+  GetPostById(id: string): Observable<IPost> {
+    return this.http.get<{message: string, post: any}>(`http://localhost:3000/api/posts/${id}`)
+    .pipe(
+      rxMap((postData) => {
+        return <IPost>{
+          title: postData.post.title,
+          content: postData.post.content,
+          id: postData.post._id
+        };
+      }))
+  }
+
   AddPost(postData: IPost) {
     this.http.post<{message: string, postId: string}>('http://localhost:3000/api/posts', postData)
         .subscribe(res => {
@@ -51,13 +63,25 @@ export class PostService {
         });
   }
 
+  UpdatePost(id: string, postData: IPost) {
+    this.http.put<{message: string}>(`http://localhost:3000/api/posts/${id}`, postData)
+    .subscribe(res => {
+      const index = findIndex(this.posts, x => x.id == id);
+      this.posts[index] = postData;
+      this.postSubject.next(this.posts);
+      this.router.navigate(['/']);
+    }, err => {
+      console.error('Failed to update post');
+    });
+  }
+
   DeletePost(id: string) {
     this.http.delete<{message: string}>(`http://localhost:3000/api/posts/${id}`)
     .subscribe(res => {
       remove(this.posts, x => x.id == id);
       this.postSubject.next(this.posts);
     }, err => {
-      console.error('Failed to delete');
+      console.error('Failed to delete post');
     });
   }
 }
