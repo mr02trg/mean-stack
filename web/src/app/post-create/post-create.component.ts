@@ -21,9 +21,11 @@ export class PostCreateComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
-    content: ['', [Validators.required, Validators.maxLength(1000)]]
+    content: ['', [Validators.required, Validators.maxLength(1000)]],
+    image: [null, [Validators.required]]
   });
 
+  imagePreview: string;
   postId: string;
 
   ngOnInit() {
@@ -34,6 +36,22 @@ export class PostCreateComponent implements OnInit {
             this.getPost(this.postId);
           }
         })
+  }
+
+  onImageSelect(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    // console.log(file);
+    this.form.patchValue({
+      image: file
+    });
+    this.form.get('image').updateValueAndValidity();
+
+    // read image file
+    const fr = new FileReader();
+    fr.onload = (e) => {
+      this.imagePreview = (e.target as any).result as string;
+    }
+    fr.readAsDataURL(file);
   }
 
   submit() {
@@ -77,6 +95,7 @@ export class PostCreateComponent implements OnInit {
     this.postService.GetPostById(postId)
         .subscribe(res => {
           if (res) {
+            this.imagePreview = res.imagePath;
             this.setForm(res);
           }
         }, error => {
@@ -87,7 +106,8 @@ export class PostCreateComponent implements OnInit {
   private setForm(data: IPost) {
     this.form.patchValue({
       title: data.title,
-      content: data.content
+      content: data.content,
+      image: data.imagePath
     });
     this.form.updateValueAndValidity();
   }

@@ -1,4 +1,10 @@
 :host {
     display: block;
     margin-top: 30px;
+
+    .post-image {
+        max-width: 200px;
+        height: auto;
+        margin: 15px 0;
+    }
 }

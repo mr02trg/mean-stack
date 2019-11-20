@@ -29,8 +29,7 @@ export class PostService {
         .pipe(rxMap((postData) => {
             return map(postData.posts, p => {
               return {
-                title: p.title,
-                content: p.content,
+                ...p,
                 id: p._id
               }
             });
@@ -46,25 +45,49 @@ export class PostService {
     .pipe(
       rxMap((postData) => {
         return <IPost>{
-          title: postData.post.title,
-          content: postData.post.content,
+          ...postData.post,
           id: postData.post._id
         };
       }))
   }
 
   AddPost(postData: IPost) {
-    this.http.post<{message: string, postId: string}>('http://localhost:3000/api/posts', postData)
+    const formData = new FormData();
+    formData.append('title', postData.title);
+    formData.append('content', postData.content);
+    formData.append('image', postData.image);
+
+    this.http.post<{message: string, post: any}>('http://localhost:3000/api/posts', formData)
+        .pipe(
+          rxMap((postData) => {
+            return <IPost> {
+              ...postData.post,
+              id: postData.post._id
+            }
+          })
+        )
         .subscribe(res => {
-          postData.id = res.postId;
-          this.posts.push(postData);
+          this.posts.push(res);
           this.postSubject.next(this.posts);
           this.router.navigate(['/']);
+        }, error => {
+          console.error('Failed to add post');
         });
   }
 
   UpdatePost(id: string, postData: IPost) {
-    this.http.put<{message: string}>(`http://localhost:3000/api/posts/${id}`, postData)
+    let request: any = null;
+    if (postData.image) {
+      request = new FormData();
+      request.append('title', postData.title);
+      request.append('content', postData.content);
+      request.append('image', postData.image);
+    }
+    else {
+      request = postData;
+    }
+
+    this.http.put<{message: string}>(`http://localhost:3000/api/posts/${id}`, request)
     .subscribe(res => {
       const index = findIndex(this.posts, x => x.id == id);
       this.posts[index] = postData;

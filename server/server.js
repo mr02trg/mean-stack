@@ -33,6 +33,10 @@ app.use((req, res, next) => {
     next();
 })
 
+// register static path to image storage
+app.use('/images', express.static('uploadImages'));
+
+// register post controller
 app.use('/api/posts', postController)
 
 // expose express app and all registered middle wares

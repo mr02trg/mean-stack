@@ -1,8 +1,37 @@
 
 var express = require('express');
+var multer = require('multer');
+var path = require('path');
+var fs = require('fs');
+var _ = require('lodash');
+
 var router = express.Router();
 
 const Post = require('../models/post');
+
+// multer configuration
+const MIME_TYPE_MAP = {
+    'image/png': 'png',
+    'image/jpeg': 'jpg',
+    'image/jpg': 'jpg'
+}
+const storage = multer.diskStorage({
+    // specify where to save the file
+    destination: (req, file, cb) => {
+        const isValid = MIME_TYPE_MAP[file.mimetype];
+        let error = new Error("Invalid mime type");
+        if (isValid) {
+            error = null;
+        }
+        cb(error, "./uploadImages");
+    },
+    // construct file name
+    filename: (req, file, cb) => {
+        const name = path.parse(file.originalname).name.toLowerCase().split(' ').join('-');
+        const ext = MIME_TYPE_MAP[file.mimetype];
+        cb(null, name + '-' + Date.now() + '.' + ext);
+    }
+});
 
 router.get('', (req, res, next) => {
     Post.find()
@@ -29,10 +58,12 @@ router.get('/:id', (req, res, next) => {
         });
 });
 
-router.post('', (req, res, next) => {
+router.post('', multer({storage: storage}).single("image"), (req, res, next) => {
+    const serverPath = req.protocol + '://' + req.get("host");
     const newPost = new Post({
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        imagePath: serverPath + '/images/' + req.file.filename
     });
 
     // save to db
@@ -40,14 +71,33 @@ router.post('', (req, res, next) => {
             .then((result) => {
                 res.status(201).json({
                     message: 'Post added successfully',
-                    postId: result._id
+                    post: result
                 });
             });
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) => {
+
+    let newUpload = false;
+    if (req.file) {
+        newUpload = true;
+        const serverPath = req.protocol + '://' + req.get("host");
+        req.body.imagePath = serverPath + '/images/' + req.file.filename;
+    }
+
     Post.findByIdAndUpdate(req.params.id, req.body)
         .then(result => {
+            console.log(result);
+            if (newUpload) {
+                // remove old image
+                const imagePath = result.imagePath;
+                const filename = imagePath.substring(_.lastIndexOf(imagePath, '/') + 1);
+                try {
+                    fs.unlinkSync('./uploadImages/' + filename);
+                } catch(err) {
+                    console.error(err);
+                }
+            }
             res.status(200).json({
                 message: 'Unable to update post',
                 post: result
@@ -61,9 +111,17 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-    Post.deleteOne({_id: req.params.id})
+    Post.findOneAndDelete({_id: req.params.id})
         .then(result => {
-            // console.log(result);
+            // remove stored image
+            const imagePath = result.imagePath;
+            const filename = imagePath.substring(_.lastIndexOf(imagePath, '/') + 1);
+            // console.log(filename);
+            try {
+                fs.unlinkSync('./uploadImages/' + filename);
+            } catch(err) {
+                console.error(err);
+            }
         })
     res.status(200).json({
         message: 'Post deleted successfully'
