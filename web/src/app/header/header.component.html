@@ -1,7 +1,9 @@
 
 <mat-toolbar>
     <mat-toolbar-row>
-        <a mat-button routerLink="/">My Posts</a>
-        <a mat-button routerLink="/create">Create Post</a>
+        <a mat-button routerLink="/post">My Posts</a>
+        <a mat-button routerLink="/post/create">Create Post</a>
+        <span class="spacing"></span>
+        <a mat-button (click)="logout()">Logout</a>
     </mat-toolbar-row>
 </mat-toolbar>

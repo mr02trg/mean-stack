@@ -21,14 +21,14 @@ import { HeaderComponent } from './header/header.component';
 import { PostCreateComponent } from './post-create/post-create.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { PublicModule } from './public/public.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     PostCreateComponent,
-    PostListComponent
+    PostListComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +36,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+
+    PublicModule,
 
     MatToolbarModule,
     MatCardModule,

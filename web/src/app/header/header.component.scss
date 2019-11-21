@@ -1,4 +1,8 @@
 :host {
     display: block;
     margin-bottom: 30px;
+
+    .spacing {
+        flex: 1 1 auto;
+    }
 }
