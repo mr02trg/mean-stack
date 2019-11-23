@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 // import controllers
 var postController = require('./controller/postController');
+var userController = require('./controller/userController');
 
 // request handling
 const app = express();
@@ -26,7 +27,7 @@ app.use(bodyParser.json());
 // allow cors
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 
     // continue to the next middleware
@@ -35,6 +36,9 @@ app.use((req, res, next) => {
 
 // register static path to image storage
 app.use('/images', express.static('uploadImages'));
+
+// register user controller
+app.use('/api/users', userController)
 
 // register post controller
 app.use('/api/posts', postController)

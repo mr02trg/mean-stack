@@ -5,6 +5,7 @@ import { PageEvent } from '@angular/material';
 import { PostService } from '../services/post.service';
 import { IPost } from '../models/IPost';
 import { IPostResponse } from '../models/IPostResponse';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-post-list',
@@ -14,7 +15,8 @@ import { IPostResponse } from '../models/IPostResponse';
 export class PostListComponent implements OnInit {
 
   constructor(
-    private postService: PostService
+    private postService: PostService,
+    private authService: AuthService
   ) { }
 
   pageData: IPostResponse;
@@ -42,5 +44,9 @@ export class PostListComponent implements OnInit {
     this.pageSize = event.pageSize;
     console.log(event);
     this.postService.GetPosts(this.pageIndex, this.pageSize);
+  }
+
+  isAuthenticated() {
+    return this.authService.isAuthenticated();
   }
 }

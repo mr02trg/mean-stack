@@ -7,6 +7,7 @@ var _ = require('lodash');
 
 var router = express.Router();
 
+const securityHandler = require('../middleware/security-handler');
 const Post = require('../models/post');
 
 // multer configuration
@@ -33,8 +34,10 @@ const storage = multer.diskStorage({
     }
 });
 
-router.get('', (req, res, next) => {
+// register security middlewares
+// router.use(securityHandler);
 
+router.get('', (req, res, next) => {
     let query = Post.find();
     let totalPosts = 0;
 
@@ -57,7 +60,7 @@ router.get('', (req, res, next) => {
     })
 })
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', securityHandler, (req, res, next) => {
     Post.findById(req.params.id)
         .then(document => {
             res.status(200).json({
@@ -72,7 +75,7 @@ router.get('/:id', (req, res, next) => {
         });
 });
 
-router.post('', multer({storage: storage}).single("image"), (req, res, next) => {
+router.post('', securityHandler, multer({storage: storage}).single("image"), (req, res, next) => {
     const serverPath = req.protocol + '://' + req.get("host");
     const newPost = new Post({
         title: req.body.title,
@@ -90,7 +93,7 @@ router.post('', multer({storage: storage}).single("image"), (req, res, next) => 
             });
 });
 
-router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) => {
+router.put('/:id', securityHandler, multer({storage: storage}).single("image"), (req, res, next) => {
 
     let newUpload = false;
     if (req.file) {
@@ -124,7 +127,7 @@ router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) 
         })
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', securityHandler, (req, res, next) => {
     Post.findOneAndDelete({_id: req.params.id})
         .then(result => {
             // remove stored image

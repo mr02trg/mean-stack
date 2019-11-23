@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { forEach } from 'lodash';
+import { UserService } from 'src/app/services/user.service';
+import { IUser } from 'src/app/models/IUser';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,8 @@ import { forEach } from 'lodash';
 export class LoginComponent implements OnInit {
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService
   ) { }
 
   form: FormGroup = this.fb.group({
@@ -27,7 +30,6 @@ export class LoginComponent implements OnInit {
       forEach(this.form.controls, c => c.markAsTouched());
       return;
     }
-
-    console.log(this.form.value);
+    this.userService.AuthenticateUser(<IUser>{...this.form.value});
   }
 }
