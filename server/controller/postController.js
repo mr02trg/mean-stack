@@ -80,7 +80,8 @@ router.post('', securityHandler, multer({storage: storage}).single("image"), (re
     const newPost = new Post({
         title: req.body.title,
         content: req.body.content,
-        imagePath: serverPath + '/images/' + req.file.filename
+        imagePath: serverPath + '/images/' + req.file.filename,
+        author: req.userId
     });
 
     // save to db
@@ -102,9 +103,14 @@ router.put('/:id', securityHandler, multer({storage: storage}).single("image"), 
         req.body.imagePath = serverPath + '/images/' + req.file.filename;
     }
 
-    Post.findByIdAndUpdate(req.params.id, req.body)
+    Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, req.body)
         .then(result => {
-            console.log(result);
+            if (! result) {
+                return res.status(400).json({
+                    message: 'Unable to update post',
+                    post: null
+                })
+            }
             if (newUpload) {
                 // remove old image
                 const imagePath = result.imagePath;
@@ -128,8 +134,14 @@ router.put('/:id', securityHandler, multer({storage: storage}).single("image"), 
 });
 
 router.delete('/:id', securityHandler, (req, res, next) => {
-    Post.findOneAndDelete({_id: req.params.id})
+    Post.findOneAndDelete({_id: req.params.id, author: req.userId })
         .then(result => {
+            if (! result) {
+                return res.status(400).json({
+                    message: 'Unable to delete',
+                    post: null
+                })
+            }
             // remove stored image
             const imagePath = result.imagePath;
             const filename = imagePath.substring(_.lastIndexOf(imagePath, '/') + 1);
@@ -139,10 +151,16 @@ router.delete('/:id', securityHandler, (req, res, next) => {
             } catch(err) {
                 console.error(err);
             }
+
+            res.status(200).json({
+                message: 'Post deleted successfully'
+            })
+        }, error => {
+            res.status(400).json({
+                message: 'Unable to delete',
+                post: null
+            })
         })
-    res.status(200).json({
-        message: 'Post deleted successfully'
-    })
 });
 
 module.exports = router;

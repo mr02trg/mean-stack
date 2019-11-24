@@ -22,6 +22,8 @@ export class PostListComponent implements OnInit {
   pageData: IPostResponse;
   subscription: Subscription;
 
+  curUser = this.authService.user;
+
   // pagination
   pageIndex = 0;
   pageSize = 1;

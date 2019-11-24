@@ -101,7 +101,7 @@ export class PostService {
       const index = findIndex(this.postData, x => x.id == id);
       this.postData[index] = postData;
       this.postSubject.next(this.postData);
-      this.router.navigate(['/']);
+      this.router.navigate(['/post']);
     }, err => {
       console.error('Failed to update post');
     });

@@ -3,5 +3,6 @@ export interface IPost {
     title: string;
     content: string;
     imagePath: string;
-    image: File
+    image: File;
+    author: string;
 }
