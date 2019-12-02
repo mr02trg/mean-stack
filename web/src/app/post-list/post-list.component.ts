@@ -26,7 +26,7 @@ export class PostListComponent implements OnInit {
 
   // pagination
   pageIndex = 0;
-  pageSize = 1;
+  pageSize = 5;
   pageSizeOptions: number[] = [1, 5, 10];
 
   ngOnInit() {

@@ -78,7 +78,7 @@ export class PostService {
           this.postData.totalPosts += 1;
           this.postData.posts.push(res);
           this.postSubject.next(this.postData);
-          this.router.navigate(['/']);
+          this.router.navigate(['post']);
         }, error => {
           console.error('Failed to add post');
         });
