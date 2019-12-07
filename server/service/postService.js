@@ -1,6 +1,7 @@
 var fs = require('fs');
 var _ = require('lodash');
 
+const s3Helper = require('../s3/s3-helper');
 const Post = require('../models/post');
 
 function getPosts(req, res, next) {
@@ -17,11 +18,11 @@ function getPosts(req, res, next) {
         totalPosts = postCount
         return query;
     })
-    .then(documents => {
+    .then(posts => {
         res.status(200).json({
             message: 'Posts fetched successfully',
             totalPosts: totalPosts,
-            posts: documents
+            posts: posts
         });
     })
 }
@@ -42,14 +43,17 @@ function getPostById(req, res, next) {
 }
 
 function addPost(req, res, next) {
-    const serverPath = req.protocol + '://' + req.get("host");
+    // console.log(req.files);
+    res.status(200);
     const newPost = new Post({
         title: req.body.title,
         content: req.body.content,
-        imagePath: serverPath + '/images/' + req.file.filename,
+        documents: _.map(req.files, f => {
+            return {fileName: f.originalname, key: f.key}
+        }),
         author: req.userId
     });
-
+    
     // save to db
     newPost.save()
             .then((result) => {
@@ -61,41 +65,67 @@ function addPost(req, res, next) {
 }
 
 function updatePost(req, res, next) {
-    let newUpload = false;
-    if (req.file) {
-        newUpload = true;
-        const serverPath = req.protocol + '://' + req.get("host");
-        req.body.imagePath = serverPath + '/images/' + req.file.filename;
+    var uploadedKeys = [];
+    if (typeof req.body.documents === 'string') {
+        var data = JSON.parse(req.body.documents);
+        uploadedKeys.push(data ? data.key : null);
+    }
+    else {
+        uploadedKeys = _.map(req.body.documents, i => {
+            var data = JSON.parse(i);
+            return data ? data.key : null
+        });    
     }
 
-    Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, req.body)
-        .then(result => {
-            if (! result) {
-                return res.status(400).json({
-                    message: 'Unable to update post',
-                    post: null
-                })
-            }
-            if (newUpload) {
-                // remove old image
-                const imagePath = result.imagePath;
-                const filename = imagePath.substring(_.lastIndexOf(imagePath, '/') + 1);
-                try {
-                    fs.unlinkSync('./uploadImages/' + filename);
-                } catch(err) {
-                    console.error(err);
-                }
-            }
-            res.status(200).json({
-                message: 'Unable to update post',
-                post: result
-            })
-        }, error => {
-            res.status(400).json({
-                message: 'Unable to update post',
-                post: null
-            })
+    const newUploads = _.map(req.files, f => { return {fileName: f.originalname, key: f.key}});
+    let removedUploads = [];
+    let updatedPost = {};
+
+    Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, 
+        {   
+            $pull: {
+                documents: {  key: { $nin: uploadedKeys }  }
+            },
+            $set: 
+            {
+                title: req.body.title,
+                content: req.body.content
+            },
+        },
+        { "new": false}
+    )
+    .then( result => {
+        removedUploads = _.filter(result.documents, x => ! uploadedKeys.includes(x.key));
+        return Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, 
+            {
+                $push: 
+                {
+                    documents: {
+                        $each: newUploads
+                    }
+                },
+            },
+            { "new": true}
+        );
+    })
+    .then(result => {
+        updatedPost = result;
+        if (removedUploads.length > 0)
+            return s3Helper.deleteDocuments(removedUploads);
+    })
+    .then( result => {
+        res.status(200).json({
+            message: 'Post update successfully',
+            post: updatedPost
         })
+    })
+    .catch( err => {
+        console.error(err);
+        return res.status(400).json({
+            message: 'Unable to update post',
+            post: null
+        })
+    })
 }
 
 function deletePost(req, res, next) {
@@ -103,29 +133,66 @@ function deletePost(req, res, next) {
         .then(result => {
             if (! result) {
                 return res.status(400).json({
-                    message: 'Unable to delete',
+                    message: 'Bad Request',
                     post: null
                 })
             }
-            // remove stored image
-            const imagePath = result.imagePath;
-            const filename = imagePath.substring(_.lastIndexOf(imagePath, '/') + 1);
-            // console.log(filename);
-            try {
-                fs.unlinkSync('./uploadImages/' + filename);
-            } catch(err) {
-                console.error(err);
-            }
-
+            if (result.documents && result.documents.length > 0)
+                return s3Helper.deleteDocuments(result.documents)
+        })
+        .then( success => {
             res.status(200).json({
                 message: 'Post deleted successfully'
             })
-        }, error => {
+        })
+        .catch(err => {
+            console.error(err);
             res.status(400).json({
-                message: 'Unable to delete',
-                post: null
+                message: 'Bad request'
             })
         })
+}
+
+function downloadPostDocument(req, res, next) {
+    var postId = req.params.id;
+    var key = req.body.key;
+
+    if (key) {
+        s3Helper.getDocumentByKey(key)
+                .then(result => {
+                    return res.status(200).json({
+                        message: "Retrieve document successfully",
+                        response: result
+                    });
+                }, err => {
+                    console.error(err);
+                    return res.status(400).json({
+                        message: "Bad Request"
+                    });
+                });
+    }
+    else {
+        Post.findById(postId)
+        .then(post => {
+            var promises = [];
+            _.forEach(post.documents, doc => {
+                promises.push(s3Helper.getDocumentByKey(doc.key));
+            });
+
+            return Promise.all(promises);
+        })
+        .then(result => {
+            return res.status(200).json({
+                message: "Retrieve documents successfully",
+                response: result
+            })
+        })
+        .catch(err => {
+            return res.status(400).json({
+                message: "Bad Request"
+            })
+        });
+    }
 }
 
 module.exports = {
@@ -133,5 +200,6 @@ module.exports = {
     getPostById,
     addPost,
     updatePost,
-    deletePost
+    deletePost,
+    downloadPostDocument
 }

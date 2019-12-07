@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+require('dotenv').config()
 
 // import controllers
 var postController = require('./controller/postController');
@@ -11,7 +12,7 @@ var userController = require('./controller/userController');
 const app = express();
 
 // connect to db
-const dbConnectionString = "mongodb+srv://tue:tldni278@cluster0-ady2d.mongodb.net/test?retryWrites=true&w=majority";
+const dbConnectionString = `mongodb+srv://${process.env.DB_HOSTNAME}:${process.env.DB_PASSWORD}@cluster0-ady2d.mongodb.net/test?retryWrites=true&w=majority`;
 mongoose.set('useFindAndModify', false);
 mongoose.connect(dbConnectionString, {useUnifiedTopology: true, useNewUrlParser: true})
         .then(() => {
@@ -33,9 +34,6 @@ app.use((req, res, next) => {
     // continue to the next middleware
     next();
 })
-
-// register static path to image storage
-app.use('/images', express.static('uploadImages'));
 
 // register user controller
 app.use('/api/users', userController)

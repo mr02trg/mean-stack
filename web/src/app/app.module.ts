@@ -13,7 +13,9 @@ import
    MatExpansionModule,
    MatButtonModule,
    MatDividerModule,
-   MatPaginatorModule
+   MatPaginatorModule,
+   MatListModule,
+   MatIconModule
 } from '@angular/material';
 
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
@@ -49,7 +51,9 @@ import { PublicModule } from './public/public.module';
     MatExpansionModule,
     MatButtonModule,
     MatDividerModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatListModule,
+    MatIconModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

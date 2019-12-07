@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { forEach } from 'lodash';
+import { forEach, remove } from 'lodash';
+import { ActivatedRoute } from '@angular/router';
 
 import { PostService } from '../services/post.service';
 import { IPost } from '../models/IPost';
-import { ActivatedRoute } from '@angular/router';
+import { IDocument } from '../models/IDocument';
 
 @Component({
   selector: 'app-post-create',
@@ -22,10 +23,10 @@ export class PostCreateComponent implements OnInit {
   form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
     content: ['', [Validators.required, Validators.maxLength(1000)]],
-    image: [null, [Validators.required]]
+    documents: [null]
   });
 
-  imagePreview: string;
+  files: (File|IDocument)[] = [];
   postId: string;
 
   ngOnInit() {
@@ -38,20 +39,27 @@ export class PostCreateComponent implements OnInit {
         })
   }
 
-  onImageSelect(event: Event) {
-    const file = (event.target as HTMLInputElement).files[0];
-    // console.log(file);
-    this.form.patchValue({
-      image: file
-    });
-    this.form.get('image').updateValueAndValidity();
+  onDocumentSelect(event: Event) {
+    const fileList = (event.target as HTMLInputElement).files;
+    forEach(fileList, file => this.files.push(file));
 
-    // read image file
-    const fr = new FileReader();
-    fr.onload = (e) => {
-      this.imagePreview = (e.target as any).result as string;
-    }
-    fr.readAsDataURL(file);
+    this.form.patchValue({
+      'documents': this.files
+    })
+    this.form.updateValueAndValidity();
+  }
+
+  download(postId?: string, data?: any) {
+    this.postService.DownloadPostDocument(postId, data);
+    this.form.patchValue({
+      'documents': this.files
+    })
+    this.form.updateValueAndValidity();
+  }
+
+  removeAttachment(data: any) {
+    remove(this.files, x => x === data);
+    this
   }
 
   submit() {
@@ -73,10 +81,8 @@ export class PostCreateComponent implements OnInit {
       ...this.form.value,
       _id: this.postId
     }
+
     this.postService.UpdatePost(this.postId, data);
-    this.form.reset();
-    this.form.markAsUntouched();
-    this.form.markAsPristine();
   }
 
   private addPost() {
@@ -84,18 +90,15 @@ export class PostCreateComponent implements OnInit {
       forEach(this.form.controls, c => c.markAsTouched());
       return;
     }
+
     const data: IPost = this.form.value;
     this.postService.AddPost(data);
-    this.form.reset();
-    this.form.markAsUntouched();
-    this.form.markAsPristine();
   }
 
   private getPost(postId: string) {
     this.postService.GetPostById(postId)
         .subscribe(res => {
           if (res) {
-            this.imagePreview = res.imagePath;
             this.setForm(res);
           }
         }, error => {
@@ -104,10 +107,11 @@ export class PostCreateComponent implements OnInit {
   }
 
   private setForm(data: IPost) {
+    this.files = data.documents;
     this.form.patchValue({
       title: data.title,
       content: data.content,
-      image: data.imagePath
+      documents: data.documents
     });
     this.form.updateValueAndValidity();
   }

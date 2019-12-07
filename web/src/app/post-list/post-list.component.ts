@@ -41,6 +41,10 @@ export class PostListComponent implements OnInit {
     this.postService.DeletePost(id, this.pageIndex, this.pageSize);
   }
 
+  download(postId: string, data?: any) {
+    this.postService.DownloadPostDocument(postId, data);
+  }
+
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
