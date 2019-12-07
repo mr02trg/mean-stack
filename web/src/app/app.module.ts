@@ -3,29 +3,18 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import
-{ 
-   MatToolbarModule,
-   MatCardModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatExpansionModule,
-   MatButtonModule,
-   MatDividerModule,
-   MatPaginatorModule,
-   MatListModule,
-   MatIconModule
-} from '@angular/material';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PublicModule } from './public/public.module';
+import { MaterialDesignModule } from './material-design/material-design.module';
+import { SharedModule } from './shared/shared.module';
 
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 
+import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { PostCreateComponent } from './post-create/post-create.component';
 import { PostListComponent } from './post-list/post-list.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { PublicModule } from './public/public.module';
 
 
 @NgModule({
@@ -41,19 +30,10 @@ import { PublicModule } from './public/public.module';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MaterialDesignModule,
 
     PublicModule,
-
-    MatToolbarModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatExpansionModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatPaginatorModule,
-    MatListModule,
-    MatIconModule
+    SharedModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

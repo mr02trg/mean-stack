@@ -23,6 +23,7 @@ export class PostCreateComponent implements OnInit {
   form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
     content: ['', [Validators.required, Validators.maxLength(1000)]],
+    tags: [[]],
     documents: [null]
   });
 
@@ -95,6 +96,7 @@ export class PostCreateComponent implements OnInit {
     this.postService.AddPost(data);
   }
 
+  // load post by id
   private getPost(postId: string) {
     this.postService.GetPostById(postId)
         .subscribe(res => {
@@ -111,6 +113,7 @@ export class PostCreateComponent implements OnInit {
     this.form.patchValue({
       title: data.title,
       content: data.content,
+      tags: data.tags,
       documents: data.documents
     });
     this.form.updateValueAndValidity();

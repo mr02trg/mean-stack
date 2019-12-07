@@ -65,6 +65,7 @@ export class PostService {
     const formData = new FormData();
     formData.append('title', postData.title);
     formData.append('content', postData.content);
+    formData.append('tags', JSON.stringify(postData.tags));
 
     if (postData.documents) {
       forEach(postData.documents, i => formData.append('documents', i));
@@ -95,6 +96,8 @@ export class PostService {
       request = new FormData();
       request.append('title', postData.title);
       request.append('content', postData.content);
+      request.append('tags', JSON.stringify(postData.tags));
+      
       forEach(postData.documents, i => {
         if (i instanceof File)
           request.append('documents', i);

@@ -48,6 +48,7 @@ function addPost(req, res, next) {
     const newPost = new Post({
         title: req.body.title,
         content: req.body.content,
+        tags: JSON.parse(req.body.tags),
         documents: _.map(req.files, f => {
             return {fileName: f.originalname, key: f.key}
         }),
@@ -65,6 +66,8 @@ function addPost(req, res, next) {
 }
 
 function updatePost(req, res, next) {
+
+    //parse uploaded file
     var uploadedKeys = [];
     if (typeof req.body.documents === 'string') {
         var data = JSON.parse(req.body.documents);
@@ -76,15 +79,24 @@ function updatePost(req, res, next) {
             return data ? data.key : null
         });    
     }
-
     const newUploads = _.map(req.files, f => { return {fileName: f.originalname, key: f.key}});
     let removedUploads = [];
-    let updatedPost = {};
 
+    // parse tags
+    var newTags = [];
+    if (typeof req.body.tags === 'string') {
+        newTags = JSON.parse(req.body.tags);;
+    }
+    else {
+        newTags = req.body.tags;
+    }
+
+    let updatedPost = {};
     Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, 
         {   
             $pull: {
-                documents: {  key: { $nin: uploadedKeys }  }
+                documents: {  key: { $nin: uploadedKeys }  },
+                tags: { $nin: newTags }
             },
             $set: 
             {
@@ -96,13 +108,13 @@ function updatePost(req, res, next) {
     )
     .then( result => {
         removedUploads = _.filter(result.documents, x => ! uploadedKeys.includes(x.key));
+        newTags = _.filter(newTags, x => ! result.tags.includes(x));
         return Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, 
             {
                 $push: 
                 {
-                    documents: {
-                        $each: newUploads
-                    }
+                    documents: { $each: newUploads },
+                    tags: { $each: newTags }
                 },
             },
             { "new": true}

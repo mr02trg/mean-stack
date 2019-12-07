@@ -2,17 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import
-{ 
-   MatCardModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatButtonModule,
-} from '@angular/material';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MaterialDesignModule } from '../material-design/material-design.module';
 
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -28,11 +22,7 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
+    MaterialDesignModule
   ],
   exports: [
     RegisterComponent,
