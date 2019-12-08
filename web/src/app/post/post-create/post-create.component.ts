@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forEach, remove } from 'lodash';
 import { ActivatedRoute } from '@angular/router';
 
-import { PostService } from '../services/post.service';
-import { IPost } from '../models/IPost';
-import { IDocument } from '../models/IDocument';
+import { PostService } from '../../services/post.service';
+import { IPost } from '../../models/IPost';
+import { IDocument } from '../../models/IDocument';
 
 @Component({
   selector: 'app-post-create',

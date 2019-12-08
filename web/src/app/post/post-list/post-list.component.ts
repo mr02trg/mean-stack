@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material';
 
-import { PostService } from '../services/post.service';
-import { IPost } from '../models/IPost';
-import { IPostResponse } from '../models/IPostResponse';
-import { AuthService } from '../services/auth.service';
+import { PostService } from '../../services/post.service';
+import { IPostResponse } from '../../models/IPostResponse';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-post-list',
