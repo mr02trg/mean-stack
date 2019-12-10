@@ -9,6 +9,7 @@ import * as JSZip from 'jszip';
 
 import { IPost } from '../models/IPost';
 import { IPostResponse } from '../models/IPostResponse';
+import { IPostSearchRequest } from '../models/IPostSearchRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +28,21 @@ export class PostService {
   }
 
   // api 
-  GetPosts(pageIndex: number, pageSize: number) {
+  GetPosts(pageIndex: number, pageSize: number, search?: IPostSearchRequest) {
     let params = new HttpParams();
     params = params.append('pageIndex', pageIndex.toString());
     params = params.append('pageSize', pageSize.toString());
+    
+    if (search) {
+      if (search.tags)
+        params = params.append('searchInput', JSON.stringify(search.tags));
+        
+      if (search.date) {
+        params = params.append('startDate', search.date.begin.toString());
+        params = params.append('endDate', search.date.end.toString());
+      }
+    }
+
     this.http.get<{message: string, posts: any, totalPosts: number}>('http://localhost:3000/api/posts', {params: params})
         .pipe(rxMap((postData) => {
           return <IPostResponse> {

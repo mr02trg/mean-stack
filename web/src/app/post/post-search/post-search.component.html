@@ -1,0 +1,31 @@
+<div *ngIf="!show" class="search-button-wrapper">
+    <button mat-raised-button color="primary" (click)="show = !show">Search</button>
+</div>
+<mat-card *ngIf="show" class="search-card-wrapper">
+    <div class="d-flex end">
+        <mat-icon style="cursor: pointer;" (click)="show = !show; onClear()">clear</mat-icon>
+    </div>
+    <form [formGroup]="form" (submit)="onSearch()">
+        <div class="flex-grow-1 gap">
+            <app-tag [form]="form" placeholder="Search" [tags]="form.get('tags').value"></app-tag>
+        </div>
+        <div class="d-flex between">
+            <mat-form-field>
+                <input matInput
+                    class="date-picker"
+                    formControlName="date"
+                    placeholder="Choose a date range"
+                    [satDatepicker]="picker"
+                    [value]="date"
+                    (change)="onDateRangeSelect($event)">
+                <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+                <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+            </mat-form-field>
+            <div>
+                <button mat-raised-button color="primary" type="submit">Search</button>
+                <button class="gap" mat-button color="warn" (click)="onClear()">Clear</button>
+            </div>
+        </div>
+    </form>
+</mat-card>
+

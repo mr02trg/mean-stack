@@ -5,7 +5,7 @@
         {{tag}}
         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
       </mat-chip>
-      <input placeholder="Tags"
+      <input [placeholder]="placeholder"
              [matChipInputFor]="tagList"
              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              [matChipInputAddOnBlur]="addOnBlur"

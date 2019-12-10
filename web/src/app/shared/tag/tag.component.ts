@@ -1,4 +1,4 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, TAB } from '@angular/cdk/keycodes';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
@@ -11,10 +11,13 @@ import { MatChipInputEvent } from '@angular/material';
 })
 export class TagComponent implements OnInit {
 
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly separatorKeysCodes: number[] = [TAB, COMMA];
   visible = true;
   selectable = true;
   addOnBlur = true;
+
+  @Input()
+  placeholder = "tags"
 
   @Input()
   tags: string[] = [];

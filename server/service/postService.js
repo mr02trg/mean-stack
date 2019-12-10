@@ -5,9 +5,34 @@ const s3Helper = require('../s3/s3-helper');
 const Post = require('../models/post');
 
 function getPosts(req, res, next) {
+    
     let query = Post.find();
-    let totalPosts = 0;
 
+    // search filter
+    if (req.query && req.query.searchInput) {
+        const searchRegex = _.join(JSON.parse(req.query.searchInput), '|');
+        query.find(
+            { $or: [
+                { tags: { $regex: searchRegex, $options: 'i'} },
+                { title: { $regex: searchRegex, $options: 'i'} },
+                { content: { $regex: searchRegex, $options: 'i'} }
+            ]}
+        )
+    }
+
+    // date filter
+    if (req.query && req.query.startDate && req.query.endDate) {
+        let startDate = new Date(req.query.startDate);
+        let endDate = new Date(req.query.endDate);
+        query.find(
+            { 
+                createdDate: {$gte: startDate, $lte: endDate}
+            }
+        );
+    }        
+    
+    let totalPosts = 0;
+    // pagination
     if (req.query) {
         const pageIndex = +req.query.pageIndex;
         const pageSize = +req.query.pageSize;

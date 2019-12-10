@@ -1,4 +1,4 @@
-
+<app-post-search (search)="onSearch($event)"></app-post-search>
 <mat-accordion class="accordion">
     <mat-expansion-panel *ngFor="let post of pageData?.posts" >
         <mat-expansion-panel-header class="post-header">

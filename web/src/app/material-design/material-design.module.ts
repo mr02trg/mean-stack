@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import
 { 
    MatToolbarModule,
@@ -13,7 +14,9 @@ import
    MatPaginatorModule,
    MatListModule,
    MatIconModule,
-   MatChipsModule
+   MatChipsModule,
+   MatDatepickerModule,
+   MatNativeDateModule
 } from '@angular/material';
 
 @NgModule({
@@ -34,7 +37,11 @@ import
     MatPaginatorModule,
     MatListModule,
     MatIconModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    SatDatepickerModule, 
+    SatNativeDateModule
   ]
 })
 export class MaterialDesignModule { }

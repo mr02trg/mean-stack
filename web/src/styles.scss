@@ -3,6 +3,27 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+// import saturn theme
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~saturn-datepicker/bundle.css';
+
+
+.d-flex {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+
+    &.end {
+        justify-content: flex-end;
+    }
+    &.between {
+        justify-content: space-between;
+    }
+
+    .flex-grow-1 {
+        flex-grow: 1;
+    }
+}
 
 .full-width {
     width: 100%;

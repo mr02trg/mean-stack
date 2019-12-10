@@ -5,6 +5,7 @@ import { PageEvent } from '@angular/material';
 import { PostService } from '../../services/post.service';
 import { IPostResponse } from '../../models/IPostResponse';
 import { AuthService } from '../../services/auth.service';
+import { IPostSearchRequest } from 'src/app/models/IPostSearchRequest';
 
 @Component({
   selector: 'app-post-list',
@@ -28,8 +29,10 @@ export class PostListComponent implements OnInit {
   pageSize = 5;
   pageSizeOptions: number[] = [1, 5, 10];
 
+  search: IPostSearchRequest;
+
   ngOnInit() {
-    this.postService.GetPosts(this.pageIndex, this.pageSize);
+    this.postService.GetPosts(this.pageIndex, this.pageSize, this.search);
     this.subscription = this.postService.getPosts().subscribe(x => this.pageData = x);
   }
 
@@ -48,7 +51,13 @@ export class PostListComponent implements OnInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     console.log(event);
-    this.postService.GetPosts(this.pageIndex, this.pageSize);
+    this.postService.GetPosts(this.pageIndex, this.pageSize, this.search);
+  }
+
+  onSearch(searchData: IPostSearchRequest) {
+    console.log(searchData);
+    this.search = searchData;
+    this.postService.GetPosts(this.pageIndex, this.pageSize, this.search)
   }
 
   isAuthenticated() {

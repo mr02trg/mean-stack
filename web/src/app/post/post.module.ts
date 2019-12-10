@@ -9,6 +9,7 @@ import { AuthGuard } from '../guards/auth.guard';
 
 import { PostListComponent } from './post-list/post-list.component';
 import { PostCreateComponent } from './post-create/post-create.component';
+import { PostSearchComponent } from './post-search/post-search.component';
 
 const routes: Routes = [
   { path: 'post', component: PostListComponent },
@@ -19,7 +20,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     PostListComponent,
-    PostCreateComponent
+    PostCreateComponent,
+    PostSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,8 @@ const routes: Routes = [
   ],
   exports: [
     PostListComponent,
-    PostCreateComponent
+    PostCreateComponent,
+    PostSearchComponent
   ]
 })
 export class PostModule { }
