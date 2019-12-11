@@ -27,7 +27,7 @@ var upload = multer({
       cb(null, {fieldName: file.fieldname, mime: file.mimetype, originalname: file.originalname});
     },
     key: function (req, file, cb) {
-      const fileName =  file.originalname.split(' ').join('-') ;
+      const fileName =  Date.now() + '_' + file.originalname.split(' ').join('-') ;
       const path = `user_${req.userId}/` + fileName;
       cb(null, path)
     }

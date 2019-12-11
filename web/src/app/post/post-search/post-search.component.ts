@@ -43,7 +43,7 @@ export class PostSearchComponent implements OnInit, OnDestroy {
   }
 
   onSearch() {
-    const request = { ... this.form.value};
+    const request = { ...this.form.value };
     this.search.emit(request);
   }
 }
