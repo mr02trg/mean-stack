@@ -3,8 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { map as rxMap } from 'rxjs/operators';
 
-import { IUser } from '../models/IUser';
+import { IActivateUserRequest } from '../models/users/IActivateUserRequest';
+import { IUser } from '../models/users/IUser';
 import { AuthService } from './auth.service';
+import { ITokenRequest } from '../models/common/ITokenRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +48,13 @@ export class UserService {
         }, error => {
           console.error('Failed to authenticate');
         });
+  }
+
+  VerifyActivationToken(request: ITokenRequest) {
+    return this.http.post<{message: string, result: boolean}>('http://localhost:3000/api/users/verifyactivationtoken', request);
+  }
+
+  ActivateUser(request: IActivateUserRequest) {
+    return this.http.post<{message: string, result: boolean}>('http://localhost:3000/api/users/activate', request);
   }
 }

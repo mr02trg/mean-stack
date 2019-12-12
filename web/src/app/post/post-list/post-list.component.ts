@@ -3,9 +3,9 @@ import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material';
 
 import { PostService } from '../../services/post.service';
-import { IPostResponse } from '../../models/IPostResponse';
+import { IPostResponse } from '../../models/posts/IPostResponse';
 import { AuthService } from '../../services/auth.service';
-import { IPostSearchRequest } from 'src/app/models/IPostSearchRequest';
+import { IPostSearchRequest } from 'src/app/models/posts/IPostSearchRequest';
 
 @Component({
   selector: 'app-post-list',

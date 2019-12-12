@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { forEach } from 'lodash';
 import { UserService } from 'src/app/services/user.service';
-import { IUser } from 'src/app/models/IUser';
+import { IUser } from 'src/app/models/users/IUser';
 
 @Component({
   selector: 'app-register',

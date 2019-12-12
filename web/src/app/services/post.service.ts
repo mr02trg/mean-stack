@@ -7,9 +7,9 @@ import { map, remove, findIndex, forEach } from 'lodash';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 
-import { IPost } from '../models/IPost';
-import { IPostResponse } from '../models/IPostResponse';
-import { IPostSearchRequest } from '../models/IPostSearchRequest';
+import { IPost } from '../models/posts/IPost';
+import { IPostResponse } from '../models/posts/IPostResponse';
+import { IPostSearchRequest } from '../models/posts/IPostSearchRequest';
 
 @Injectable({
   providedIn: 'root'

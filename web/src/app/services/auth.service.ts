@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IUser } from '../models/IUser';
+import { IUser } from '../models/users/IUser';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({

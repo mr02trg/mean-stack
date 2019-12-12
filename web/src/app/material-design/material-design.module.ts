@@ -16,7 +16,10 @@ import
    MatIconModule,
    MatChipsModule,
    MatDatepickerModule,
-   MatNativeDateModule
+   MatNativeDateModule, 
+   MatSnackBarModule,
+   MAT_SNACK_BAR_DEFAULT_OPTIONS,
+   MatProgressSpinnerModule
 } from '@angular/material';
 
 @NgModule({
@@ -25,6 +28,9 @@ import
     CommonModule,
 
 
+  ],
+  providers: [
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}
   ],
   exports: [
     MatToolbarModule,
@@ -41,7 +47,9 @@ import
     MatDatepickerModule,
     MatNativeDateModule,
     SatDatepickerModule, 
-    SatNativeDateModule
+    SatNativeDateModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ]
 })
 export class MaterialDesignModule { }
