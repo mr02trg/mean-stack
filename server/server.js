@@ -5,8 +5,9 @@ const mongoose = require('mongoose');
 require('dotenv').config()
 
 // import controllers
-var postController = require('./controller/postController');
-var userController = require('./controller/userController');
+const postController = require('./controller/postController');
+const userController = require('./controller/userController');
+const publicController = require('./controller/publicController');
 
 // request handling
 const app = express();
@@ -40,6 +41,10 @@ app.use('/api/users', userController)
 
 // register post controller
 app.use('/api/posts', postController)
+
+// register public controller
+app.use('/api/public', publicController)
+
 
 // expose express app and all registered middle wares
 module.exports = app;

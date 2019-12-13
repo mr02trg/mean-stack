@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map as rxMap } from 'rxjs/operators';
-import { map, remove, findIndex, forEach } from 'lodash';
+import { map, forEach } from 'lodash';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 
@@ -17,7 +17,7 @@ import { IPostSearchRequest } from '../models/posts/IPostSearchRequest';
 export class PostService {
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router, 
   ) { }
 
   postData: IPostResponse;
@@ -28,6 +28,26 @@ export class PostService {
   }
 
   // api 
+
+  GetAnnoucements(pageIndex: number, pageSize: number) {
+    let params = new HttpParams();
+    params = params.append('pageIndex', pageIndex.toString());
+    params = params.append('pageSize', pageSize.toString());
+
+    return this.http.get<{message: string, posts: any, totalPosts: number}>('http://localhost:3000/api/public/annoucement', {params: params})
+    .pipe(rxMap((postData) => {
+      return <IPostResponse> {
+        totalPosts: postData.totalPosts,
+        posts: map(postData.posts, p => {
+          return {
+            ...p,
+            id: p._id
+          }
+        })
+      };
+    }))
+  }
+
   GetPosts(pageIndex: number, pageSize: number, search?: IPostSearchRequest) {
     let params = new HttpParams();
     params = params.append('pageIndex', pageIndex.toString());
@@ -180,5 +200,13 @@ export class PostService {
         console.error(err.message);
       });
     }
+  }
+
+  PublishPost(id: string) {
+    return this.http.post(`http://localhost:3000/api/posts/${id}/publish`, null);
+  }
+
+  UnPublishPost(id: string) {
+    return this.http.post(`http://localhost:3000/api/posts/${id}/unpublish`, null);
   }
 }

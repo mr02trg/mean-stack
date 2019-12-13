@@ -4,6 +4,35 @@ var _ = require('lodash');
 const s3Helper = require('../s3/s3-helper');
 const Post = require('../models/post');
 
+function getAnnoucement(req, res, next) {
+    let query = Post.find({ isPublic: true });
+
+    let totalPosts = 0;
+    // pagination
+    if (req.query) {
+        const pageIndex = +req.query.pageIndex;
+        const pageSize = +req.query.pageSize;
+        query.skip(pageIndex*pageSize).limit(pageSize);
+    }
+
+    Post.countDocuments({ isPublic: true}).then(postCount => {
+        totalPosts = postCount
+        return query;
+    })
+    .then(posts => {
+        res.status(200).json({
+            message: 'Posts fetched successfully',
+            totalPosts: totalPosts,
+            posts: posts
+        });
+    }, error => {
+        res.status(400).json({
+            message: 'Unable to fetch post',
+            post: null
+        })
+    })
+}
+
 function getPosts(req, res, next) {
     
     let query = Post.find({ author: req.userId });
@@ -232,11 +261,51 @@ function downloadPostDocument(req, res, next) {
     }
 }
 
+function publishPost(req, res, next) {
+    togglePublicStatus(req.params.id, req.userId, true)
+    .then( result => {
+        res.status(200).json({
+            message: "Publish successfully",
+        })
+    }, error => {
+        res.status(400).json({
+            message: "Failed to publish"
+        })
+    })
+}
+
+function unPublishPost(req, res, next) {
+    togglePublicStatus(req.params.id, req.userId, false)
+    .then( result => {
+        res.status(200).json({
+            message: "Unpublish successfully",
+        })
+    }, error => {
+        res.status(400).json({
+            message: "Failed to unpublish"
+        })
+    })
+}
+
+function togglePublicStatus(postId, userId, status) {
+    return Post.findOneAndUpdate({ _id: postId, author: userId }, 
+        { $set: 
+            {
+                isPublic: status,
+            },
+        },
+        { "new": true}
+    )
+}
+
 module.exports = {
+    getAnnoucement,
     getPosts,
     getPostById,
     addPost,
     updatePost,
     deletePost,
-    downloadPostDocument
+    downloadPostDocument,
+    publishPost,
+    unPublishPost
 }

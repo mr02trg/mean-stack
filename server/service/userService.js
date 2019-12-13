@@ -7,41 +7,34 @@ const User = require('../models/user');
 const emailService = require('./email/emailService');
 
 function registerUser(req, res, next) {
-    if (req.body) {
-        bcrypt.hash(req.body.password, 10)
-        .then(success => {
-            const newUser = new User({
-                name: req.body.name,
-                email: req.body.email,
-                password: success,
-                activationToken: uuidv4(),
-                activationTokenExpiry: moment.utc().add(1, 'w').valueOf()
-            });
-            return newUser.save();
-        })
-        .then(document => {
-            emailService.sendUserRegistrationEmail(document);
-            res.status(201).json({
-                'message': 'User created successfully',
-                'user': {
-                    name: document.name,
-                    email: document.email
-                }
-            });
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(400).json({
-                'message': 'Failed to register',
-                'error': err
-            });
-        })
-    }
-    else {
+    bcrypt.hash(req.body.password, 10)
+    .then(success => {
+        const newUser = new User({
+            name: req.body.name,
+            email: req.body.email,
+            password: success,
+            activationToken: uuidv4(),
+            activationTokenExpiry: moment.utc().add(1, 'w').valueOf()
+        });
+        return newUser.save();
+    })
+    .then(document => {
+        emailService.sendUserRegistrationEmail(document);
+        res.status(201).json({
+            'message': 'User created successfully',
+            'user': {
+                name: document.name,
+                email: document.email
+            }
+        });
+    })
+    .catch(err => {
+        console.error(err);
         res.status(400).json({
             'message': 'Failed to register',
+            'error': err
         });
-    }
+    })
 }
 
 function authenticateUser(req, res, next) {
@@ -67,13 +60,14 @@ function authenticateUser(req, res, next) {
                 })
             }
 
-            const jwtToken = jwtHelper.sign({email: user.email, id: user._id});
+            const jwtToken = jwtHelper.sign({email: user.email, id: user._id, roleType: user.roleType});
             res.status(200).json({
                 'message': 'Authenticate successfully',
                 'token': jwtToken,
                 'user': {
                     id: user._id,
-                    name: user.name
+                    name: user.name,
+                    roleType: user.roleType
                 }
             })
         })

@@ -1,0 +1,28 @@
+<div *ngIf="pageData?.totalPosts == 0">
+    <mat-card>
+        <mat-card-header class="d-flex around">
+            <mat-card-title class="text-center">There are no annoucements to display</mat-card-title>
+        </mat-card-header>
+    </mat-card>
+</div>
+
+<div *ngIf="pageData?.totalPosts > 0">
+    <mat-card class="card" *ngFor="let post of pageData?.posts">
+        <mat-card-header class="card-header">
+            <div mat-card-avatar class="admin-avatar"></div>
+            <mat-card-title class="card-title">{{post.title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p class="content">{{post.content}}</p>
+        </mat-card-content>
+    </mat-card>
+    
+    <div class="pagination">
+        <mat-paginator [length]="pageData?.totalPosts"
+                    [pageIndex]="pageIndex"
+                    [pageSize]="pageSize"
+                    (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
+</div>
+    

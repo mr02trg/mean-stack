@@ -6,6 +6,7 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         jwtHelper.verify(token);
         req.userId = jwtHelper.decode(token).payload.id;
+        req.roleType = jwtHelper.decode(token).payload.roleType;
         next();
     }
     catch (err) {

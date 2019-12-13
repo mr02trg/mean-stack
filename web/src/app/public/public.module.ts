@@ -8,18 +8,21 @@ import { MaterialDesignModule } from '../material-design/material-design.module'
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ActivateComponent } from './activate/activate.component';
+import { AnnoucementComponent } from './annoucement/annoucement.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'activate/:token', component: ActivateComponent },
+  { path: 'annoucement', component: AnnoucementComponent },
 ];
 
 @NgModule({
   declarations: [
     RegisterComponent, 
     LoginComponent, 
-    ActivateComponent
+    ActivateComponent, 
+    AnnoucementComponent, 
   ],
   imports: [
     CommonModule,
@@ -29,7 +32,8 @@ const routes: Routes = [
   ],
   exports: [
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    AnnoucementComponent
   ]
 })
 export class PublicModule { }

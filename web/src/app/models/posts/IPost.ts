@@ -7,4 +7,5 @@ export interface IPost {
     tags: string[];
     documents: (File|IDocument)[];
     author: string;
+    isPublic: boolean;
 }
