@@ -2,6 +2,7 @@
 <mat-toolbar>
     <mat-toolbar-row>
         <a mat-button routerLink="/annoucement">Announcements</a>
+        <a mat-button routerLink="/about">About</a>
         <a *ngIf="isAuthenticated()" mat-button routerLink="/post">All Posts</a>
         <a *ngIf="isAuthenticated()" mat-button routerLink="/post/create">Create Post</a>
         <span class="spacing"></span>

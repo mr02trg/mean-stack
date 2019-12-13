@@ -9,12 +9,14 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ActivateComponent } from './activate/activate.component';
 import { AnnoucementComponent } from './annoucement/annoucement.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'activate/:token', component: ActivateComponent },
   { path: 'annoucement', component: AnnoucementComponent },
+  { path: 'about', component: AboutComponent },
 ];
 
 @NgModule({
@@ -22,7 +24,7 @@ const routes: Routes = [
     RegisterComponent, 
     LoginComponent, 
     ActivateComponent, 
-    AnnoucementComponent, 
+    AnnoucementComponent, AboutComponent, 
   ],
   imports: [
     CommonModule,
