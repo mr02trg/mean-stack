@@ -12,7 +12,7 @@ const postService =  require('../service/postService');
 // register security middlewares
 // router.use(securityHandler);
 
-router.get('', postService.getPosts);
+router.get('', securityHandler, postService.getPosts);
 
 router.get('/:id', securityHandler, postService.getPostById);
 

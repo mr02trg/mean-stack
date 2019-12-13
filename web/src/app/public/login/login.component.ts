@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { forEach } from 'lodash';
+
 import { UserService } from 'src/app/services/user.service';
+import { SnackbarService } from 'src/app/services/snackbar.service';
+
 import { IUser } from 'src/app/models/users/IUser';
 
 @Component({
@@ -14,7 +16,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private snackBar: SnackbarService
   ) { }
 
   form: FormGroup = this.fb.group({

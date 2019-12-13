@@ -7,6 +7,7 @@ import { IActivateUserRequest } from '../models/users/IActivateUserRequest';
 import { IUser } from '../models/users/IUser';
 import { AuthService } from './auth.service';
 import { ITokenRequest } from '../models/common/ITokenRequest';
+import { SnackbarService } from './snackbar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBarService: SnackbarService
   ) { }
 
   RegisterUser(request: IUser) {
@@ -46,7 +48,9 @@ export class UserService {
           this.authService.user = authenticatedUser;
           this.router.navigate(["/post"]);
         }, error => {
+          console.log(error);
           console.error('Failed to authenticate');
+          this.snackBarService.show(error, 'Dismiss');
         });
   }
 

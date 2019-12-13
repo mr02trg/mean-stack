@@ -48,20 +48,16 @@ function authenticateUser(req, res, next) {
     let user = null;
     User.findOne({email: req.body.email})
         .then(document => {
-            if (! document) {
-                return res.status(400).json({
-                    'message': 'Incorrect email or password'
-                });
+            if (document) {
+                user = document;
+                // validate password
+                return bcrypt.compare(req.body.password, document.password);
             }
-                
-            user = document;
-            // validate password
-            return bcrypt.compare(req.body.password, document.password);
         })
         .then(result => {
             if (! result) {
                 return res.status(401).json({
-                    'message': 'Failed to authenticate'
+                    'message': 'Incorrect email or password'
                 });
             }
 
@@ -136,7 +132,7 @@ function activateUser(req, res, next) {
         user.activationTokenExpiry = null;
         user.isActivated = true;
 
-        return User.update({activationToken: req.body.token}, user);
+        return User.updateOne({activationToken: req.body.token}, user);
     })
     .then(result => {
         if (result.nModified === 1) {

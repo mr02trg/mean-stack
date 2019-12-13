@@ -6,7 +6,7 @@ const Post = require('../models/post');
 
 function getPosts(req, res, next) {
     
-    let query = Post.find();
+    let query = Post.find({ author: req.userId });
 
     // search filter
     if (req.query && req.query.searchInput) {
@@ -39,7 +39,7 @@ function getPosts(req, res, next) {
         query.skip(pageIndex*pageSize).limit(pageSize);
     }
 
-    Post.count().then(postCount => {
+    Post.countDocuments({ author: req.userId }).then(postCount => {
         totalPosts = postCount
         return query;
     })

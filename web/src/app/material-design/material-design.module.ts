@@ -18,7 +18,6 @@ import
    MatDatepickerModule,
    MatNativeDateModule, 
    MatSnackBarModule,
-   MAT_SNACK_BAR_DEFAULT_OPTIONS,
    MatProgressSpinnerModule
 } from '@angular/material';
 
@@ -26,11 +25,6 @@ import
   declarations: [],
   imports: [
     CommonModule,
-
-
-  ],
-  providers: [
-    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}
   ],
   exports: [
     MatToolbarModule,

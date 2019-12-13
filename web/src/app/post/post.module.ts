@@ -12,7 +12,7 @@ import { PostCreateComponent } from './post-create/post-create.component';
 import { PostSearchComponent } from './post-search/post-search.component';
 
 const routes: Routes = [
-  { path: 'post', component: PostListComponent },
+  { path: 'post', component: PostListComponent, canActivate: [AuthGuard] },
   { path: 'post/create', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'post/edit/:id', component: PostCreateComponent, canActivate: [AuthGuard] },
 ]
