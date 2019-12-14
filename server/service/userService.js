@@ -43,6 +43,7 @@ function authenticateUser(req, res, next) {
         .then(document => {
             if (document) {
                 user = document;
+                console.log(user)
                 // validate password
                 return bcrypt.compare(req.body.password, document.password);
             }
@@ -60,7 +61,9 @@ function authenticateUser(req, res, next) {
                 })
             }
 
+            console.log('test');
             const jwtToken = jwtHelper.sign({email: user.email, id: user._id, roleType: user.roleType});
+            console.log('hey');
             res.status(200).json({
                 'message': 'Authenticate successfully',
                 'token': jwtToken,

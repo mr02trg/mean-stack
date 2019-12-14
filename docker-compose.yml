@@ -1,0 +1,17 @@
+version: '3'
+services:
+    node-server:
+        build: ./server/
+        container_name: node-server
+        ports:
+            - "8080:8080"
+        restart: always 
+        environment:
+            - PORT=8080
+            - WEBUI_BASE_URL=http://localhost:4222
+    web-ui:
+        build: ./web/
+        container_name: web-ui
+        ports:
+            - "4222:80"
+        restart: always

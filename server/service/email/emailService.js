@@ -11,14 +11,14 @@ const emailType = {
 }
 
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.sendgrid_api_key);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 function sendUserRegistrationEmail(userData) {
     getEmailTemplate(emailType.USER_REGISTRATION)
     .then(template => {
         const lookup = {
             '{{name}}': userData.name,
-            '{{activationURL}}': `${process.env.webui_base_url}/activate/${userData.activationToken}`
+            '{{activationURL}}': `${process.env.WEBUI_BASE_URL}/activate/${userData.activationToken}`
         }
         template = template.replace(/{{name}}|{{activationURL}}/gi, (matched) => { return lookup[matched] });
 

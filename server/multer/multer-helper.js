@@ -5,9 +5,9 @@ require('dotenv').config()
 
 
 AWS.config.update({
-    accessKeyId: process.env.aws_access_key_id,
-    secretAccessKey: process.env.aws_secret_access_key,
-    region: process.env.aws_region
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION
 });
 
 var s3 = new AWS.S3({ /* ... */ })
@@ -22,7 +22,7 @@ const MIME_TYPE_MAP = {
 var upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: process.env.bucket_name,
+    bucket: process.env.BUCKET_NAME,
     metadata: function (req, file, cb) {
       cb(null, {fieldName: file.fieldname, mime: file.mimetype, originalname: file.originalname});
     },

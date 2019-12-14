@@ -7,6 +7,9 @@ import { map, forEach } from 'lodash';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 
+import { BaseService } from './base.service';
+
+
 import { IPost } from '../models/posts/IPost';
 import { IPostResponse } from '../models/posts/IPostResponse';
 import { IPostSearchRequest } from '../models/posts/IPostSearchRequest';
@@ -14,11 +17,13 @@ import { IPostSearchRequest } from '../models/posts/IPostSearchRequest';
 @Injectable({
   providedIn: 'root'
 })
-export class PostService {
+export class PostService extends BaseService {
   constructor(
     private http: HttpClient,
     private router: Router, 
-  ) { }
+  ) {
+    super();
+  }
 
   postData: IPostResponse;
   postSubject: BehaviorSubject<IPostResponse> = new BehaviorSubject(this.postData);
@@ -34,7 +39,7 @@ export class PostService {
     params = params.append('pageIndex', pageIndex.toString());
     params = params.append('pageSize', pageSize.toString());
 
-    return this.http.get<{message: string, posts: any, totalPosts: number}>('http://localhost:3000/api/public/annoucement', {params: params})
+    return this.http.get<{message: string, posts: any, totalPosts: number}>(`${this.api_base_url}/public/annoucement`, {params: params})
     .pipe(rxMap((postData) => {
       return <IPostResponse> {
         totalPosts: postData.totalPosts,
@@ -63,7 +68,7 @@ export class PostService {
       }
     }
 
-    this.http.get<{message: string, posts: any, totalPosts: number}>('http://localhost:3000/api/posts', {params: params})
+    this.http.get<{message: string, posts: any, totalPosts: number}>(`${this.api_base_url}/posts`, {params: params})
         .pipe(rxMap((postData) => {
           return <IPostResponse> {
             totalPosts: postData.totalPosts,
@@ -82,7 +87,7 @@ export class PostService {
   }
 
   GetPostById(id: string): Observable<IPost> {
-    return this.http.get<{message: string, post: any}>(`http://localhost:3000/api/posts/${id}`)
+    return this.http.get<{message: string, post: any}>(`${this.api_base_url}/posts/${id}`)
     .pipe(
       rxMap((postData) => {
         return <IPost>{
@@ -103,7 +108,7 @@ export class PostService {
       forEach(postData.documents, i => formData.append('documents', i));
     }
 
-    this.http.post<{message: string, post: any}>('http://localhost:3000/api/posts', formData)
+    this.http.post<{message: string, post: any}>(`${this.api_base_url}/posts`, formData)
         .pipe(
           rxMap((postData) => {
             return <IPost> {
@@ -142,7 +147,7 @@ export class PostService {
     }
 
 
-    this.http.put<{message: string}>(`http://localhost:3000/api/posts/${id}`, request)
+    this.http.put<{message: string}>(`${this.api_base_url}/posts/${id}`, request)
     .subscribe(res => {
       this.router.navigate(['/post']);
       console.log(res);
@@ -152,7 +157,7 @@ export class PostService {
   }
 
   DeletePost(id: string, pageIndex: number, pageSize: number) {
-    this.http.delete<{message: string}>(`http://localhost:3000/api/posts/${id}`)
+    this.http.delete<{message: string}>(`${this.api_base_url}/posts/${id}`)
     .subscribe(res => {
       // reload
       this.GetPosts(pageIndex, pageSize);
@@ -169,7 +174,7 @@ export class PostService {
       }
 
       // retrieve from s3
-      this.http.post<{response: any, message: string}>(`http://localhost:3000/api/posts/${id}/document`, {key: data.key})
+      this.http.post<{response: any, message: string}>(`${this.api_base_url}/posts/${id}/document`, {key: data.key})
       .subscribe(success => {
         console.log(success);
         if (success && success.response) {
@@ -182,7 +187,7 @@ export class PostService {
     }
     else {
       // download all documents
-      this.http.post<{response: any, message: string}>(`http://localhost:3000/api/posts/${id}/document`, null)
+      this.http.post<{response: any, message: string}>(`${this.api_base_url}/posts/${id}/document`, null)
       .subscribe(success => {
         if (success && success.response) {
           var zip = new JSZip();
@@ -203,10 +208,10 @@ export class PostService {
   }
 
   PublishPost(id: string) {
-    return this.http.post(`http://localhost:3000/api/posts/${id}/publish`, null);
+    return this.http.post(`${this.api_base_url}/posts/${id}/publish`, null);
   }
 
   UnPublishPost(id: string) {
-    return this.http.post(`http://localhost:3000/api/posts/${id}/unpublish`, null);
+    return this.http.post(`${this.api_base_url}/posts/${id}/unpublish`, null);
   }
 }

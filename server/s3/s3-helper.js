@@ -7,7 +7,7 @@ require('dotenv').config()
 
 function getDocumentByKey(key) {
     var options = {
-        Bucket: process.env.bucket_name,
+        Bucket: process.env.BUCKET_NAME,
         Key: key
     }
     
@@ -26,7 +26,7 @@ function getDocumentByKey(key) {
 function deleteDocuments(documents) {
     return new Promise(function(resolve, reject) {
         const options = {
-            Bucket: process.env.bucket_name,
+            Bucket: process.env.BUCKET_NAME,
             Delete: {
                 Objects: _.map(documents, doc => {
                     return {Key : doc.key}

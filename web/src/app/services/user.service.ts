@@ -8,21 +8,24 @@ import { IUser } from '../models/users/IUser';
 import { AuthService } from './auth.service';
 import { ITokenRequest } from '../models/common/ITokenRequest';
 import { SnackbarService } from './snackbar.service';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService extends BaseService {
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
     private snackBarService: SnackbarService
-  ) { }
+  ) { 
+    super();
+  }
 
   RegisterUser(request: IUser) {
-    this.http.post<{message: string, user: any}>('http://localhost:3000/api/users/register', request)
+    this.http.post<{message: string, user: any}>(`${this.api_base_url}/users/register`, request)
         .pipe(
           rxMap((data) => {
             return <IUser> {
@@ -39,7 +42,7 @@ export class UserService {
   }
 
   AuthenticateUser(request: IUser) {
-    this.http.post<{message: string, token: string, user: any}>('http://localhost:3000/api/users/authenticate', request)
+    this.http.post<{message: string, token: string, user: any}>(`${this.api_base_url}/users/authenticate`, request)
         .subscribe(res => {
           const authenticatedUser = <IUser> {
             ...res.user,
@@ -55,10 +58,10 @@ export class UserService {
   }
 
   VerifyActivationToken(request: ITokenRequest) {
-    return this.http.post<{message: string, result: boolean}>('http://localhost:3000/api/users/verifyactivationtoken', request);
+    return this.http.post<{message: string, result: boolean}>(`${this.api_base_url}/users/verifyactivationtoken`, request);
   }
 
   ActivateUser(request: IActivateUserRequest) {
-    return this.http.post<{message: string, result: boolean}>('http://localhost:3000/api/users/activate', request);
+    return this.http.post<{message: string, result: boolean}>(`${this.api_base_url}/users/activate`, request);
   }
 }
