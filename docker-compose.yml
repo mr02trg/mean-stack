@@ -1,17 +1,50 @@
 version: '3'
 services:
-    node-server:
+    nodeserver:
         build: ./server/
         container_name: node-server
-        ports:
-            - "8080:8080"
-        restart: always 
+        restart: unless-stopped 
         environment:
-            - PORT=8080
-            - WEBUI_BASE_URL=http://localhost:4222
-    web-ui:
-        build: ./web/
-        container_name: web-ui
+            - PORT=8000
+            - WEBUI_BASE_URL=http://www.ituetruong.com
+        networks: 
+            - app-network
+    webserver:
+        image: nginx:mainline-alpine
+        container_name: webserver
         ports:
-            - "4222:80"
-        restart: always
+            - "80:80"
+        restart: unless-stopped
+        volumes: 
+            - web-root:/var/www/html
+            - ./nginx-conf:/etc/nginx/conf.d
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
+        depends_on: 
+            - nodeserver
+        networks: 
+            - app-network
+    certbot:
+        image: certbot/certbot
+        container_name: certbot
+        volumes:
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
+            - web-root:/var/www/html
+        depends_on:
+            - webserver
+        command: certonly --webroot --webroot-path=/var/www/html --email manhtue.truong@gmail.com --agree-tos --no-eff-email --staging -d ituetruong.com  -d www.ituetruong.com
+
+volumes:
+    certbot-etc:
+    certbot-var:
+    web-root:
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/ec2-user/app/mean-stack/web/dist/web
+            o: bind
+
+networks:
+    app-network:
+        driver: bridge  
