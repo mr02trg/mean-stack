@@ -14,12 +14,14 @@ services:
         container_name: webserver
         ports:
             - "80:80"
+            - "443:443"
         restart: unless-stopped
         volumes: 
             - web-root:/var/www/html
             - ./nginx-conf:/etc/nginx/conf.d
             - certbot-etc:/etc/letsencrypt
             - certbot-var:/var/lib/letsencrypt
+            - dhparam:/etc/ssl/certs
         depends_on: 
             - nodeserver
         networks: 
@@ -33,7 +35,7 @@ services:
             - web-root:/var/www/html
         depends_on:
             - webserver
-        command: certonly --webroot --webroot-path=/var/www/html --email manhtue.truong@gmail.com --agree-tos --no-eff-email --staging -d ituetruong.com  -d www.ituetruong.com
+        command: certonly --webroot --webroot-path=/var/www/html --email manhtue.truong@gmail.com --agree-tos --no-eff-email --force-renewal -d ituetruong.com  -d www.ituetruong.com
 
 volumes:
     certbot-etc:
@@ -44,6 +46,13 @@ volumes:
             type: none
             device: /home/ec2-user/app/mean-stack/web/dist/web
             o: bind
+    dhparam:
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/ec2-user/app/mean-stack/dhparam
+            o: bind
+
 
 networks:
     app-network:
