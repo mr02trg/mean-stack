@@ -9,7 +9,8 @@
                 <form [formGroup]="form" (submit)="activateUser()">
                     <mat-form-field class="full-width">
                         <input matInput placeholder="Password" type="password" formControlName="password">
-                        <mat-error *ngIf="form.get('password').invalid && form.get('password').touched">This field is required</mat-error>
+                        <mat-error *ngIf="form.get('password').touched && form.get('password').errors?.required">This field is required</mat-error>
+                        <mat-error *ngIf="form.get('password').touched && form.get('password').errors?.pattern">Password must contain at least 6 characters, including uppercase, lowercase and number </mat-error>
                     </mat-form-field>
                     <mat-card-actions class="d-flex around">
                         <button mat-raised-button type="submit" color="primary" >Activate</button>

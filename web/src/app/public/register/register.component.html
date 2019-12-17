@@ -4,15 +4,17 @@
             <form [formGroup]="form" (submit)="register()">
                 <mat-form-field class="full-width">
                     <input matInput placeholder="Name" type="name" formControlName="name">
-                    <mat-error *ngIf="form.get('name').invalid && form.get('name').touched">Invalid input</mat-error>
+                    <mat-error *ngIf="form.get('name').touched && form.get('name').errors?.required">This field is required</mat-error>
                 </mat-form-field>
                 <mat-form-field class="full-width">
                     <input matInput placeholder="Email" type="email" formControlName="email">
-                    <mat-error *ngIf="form.get('email').invalid && form.get('email').touched">Invalid input</mat-error>
+                    <mat-error *ngIf="form.get('email').touched && form.get('email').errors?.required">This field is required</mat-error>
+                    <mat-error *ngIf="form.get('email').touched && form.get('email').errors?.email">Invalid email address</mat-error>
                 </mat-form-field>
                 <mat-form-field class="full-width">
                     <input matInput placeholder="Password" type="password" formControlName="password">
-                    <mat-error *ngIf="form.get('password').invalid && form.get('password').touched">Invalid input</mat-error>
+                    <mat-error *ngIf="form.get('password').touched && form.get('password').errors?.required">This field is required</mat-error>
+                    <mat-error *ngIf="form.get('password').touched && form.get('password').errors?.pattern">Password must contain at least 6 characters, including uppercase, lowercase and number </mat-error>
                 </mat-form-field>
                 <mat-card-actions>
                     <button mat-raised-button type="submit" color="primary" >Register</button>

@@ -21,7 +21,7 @@ export class ActivateComponent implements OnInit {
   ) { }
 
   form: FormGroup = this.fb.group({
-    'password': ['', [Validators.required]]
+    'password': ['', [Validators.required, Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$')]]
   });
 
   token: string;
