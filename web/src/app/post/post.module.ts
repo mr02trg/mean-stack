@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { QuillModule } from 'ngx-quill'
+
 import { SharedModule } from '../shared/shared.module';
 import { MaterialDesignModule } from '../material-design/material-design.module';
 import { RouterModule, Routes } from '@angular/router';
@@ -30,6 +32,22 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
 
     SharedModule,
+
+    // global configuration for quill rich text editor
+    QuillModule.forRoot({
+      modules: {
+        syntax: true,
+        toolbar: [
+          [{ header: [2, 3, 4, false] }],
+          [  { size: [ 'small', false, 'large', 'huge' ] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'align': [] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          [{ 'script': 'sub'}, { 'script': 'super' }],  
+          ['image', 'link', 'code-block'],
+        ],
+      }
+    })
   ],
   exports: [
     PostListComponent,

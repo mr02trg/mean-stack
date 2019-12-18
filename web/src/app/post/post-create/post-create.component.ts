@@ -31,7 +31,7 @@ export class PostCreateComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
-    content: ['', [Validators.required, Validators.maxLength(1000)]],
+    content: [''],
     tags: [[]],
     documents: [null]
   });

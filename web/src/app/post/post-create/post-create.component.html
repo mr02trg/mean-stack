@@ -10,12 +10,11 @@
                 <mat-error *ngIf="form.get('title').invalid && form.get('title').touched">Invalid Title</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="full-width">
-                <textarea matInput placeholder="Content" rows=7 formControlName="content"></textarea>
-                <mat-error *ngIf="form.get('content').invalid && form.get('content').touched">Invalid Content</mat-error>
-            </mat-form-field>
-
             <app-tag [form]="form" [tags]="form.get('tags').value"></app-tag>
+
+            <div class="quill-editor">
+                <quill-editor [styles]="{'font-size': '120%'}" formControlName="content"></quill-editor>
+            </div>
 
             <div>
                 <button mat-raised-button type="button" class="upload-btn" (click)="fileInput.click()">Upload Documents</button>

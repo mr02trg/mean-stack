@@ -17,7 +17,7 @@ export class TagComponent implements OnInit {
   addOnBlur = true;
 
   @Input()
-  placeholder = "tags"
+  placeholder = "Tags"
 
   @Input()
   tags: string[] = [];
