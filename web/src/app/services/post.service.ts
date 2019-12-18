@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 
 import { BaseService } from './base.service';
-
+import { SpinnerService } from './spinner.service';
 
 import { IPost } from '../models/posts/IPost';
 import { IPostResponse } from '../models/posts/IPostResponse';
@@ -21,6 +21,7 @@ export class PostService extends BaseService {
   constructor(
     private http: HttpClient,
     private router: Router, 
+    private spinner: SpinnerService
   ) {
     super();
   }
@@ -33,7 +34,6 @@ export class PostService extends BaseService {
   }
 
   // api 
-
   GetAnnoucements(pageIndex: number, pageSize: number) {
     let params = new HttpParams();
     params = params.append('pageIndex', pageIndex.toString());
@@ -68,6 +68,7 @@ export class PostService extends BaseService {
       }
     }
 
+    this.spinner.show();
     this.http.get<{message: string, posts: any, totalPosts: number}>(`${this.api_base_url}/posts`, {params: params})
         .pipe(rxMap((postData) => {
           return <IPostResponse> {
@@ -83,6 +84,9 @@ export class PostService extends BaseService {
         .subscribe(res => {
           this.postData = res;
           this.postSubject.next(this.postData);
+          this.spinner.hide();
+        }, errpr => {
+          this.spinner.hide();
         })
   }
 
@@ -98,7 +102,7 @@ export class PostService extends BaseService {
   }
 
   AddPost(postData: IPost) {
-    console.log(postData);
+    // console.log(postData);
     const formData = new FormData();
     formData.append('title', postData.title);
     formData.append('content', postData.content);
@@ -108,6 +112,7 @@ export class PostService extends BaseService {
       forEach(postData.documents, i => formData.append('documents', i));
     }
 
+    this.spinner.show();
     this.http.post<{message: string, post: any}>(`${this.api_base_url}/posts`, formData)
         .pipe(
           rxMap((postData) => {
@@ -122,7 +127,9 @@ export class PostService extends BaseService {
           this.postData.posts.push(res);
           this.postSubject.next(this.postData);
           this.router.navigate(['post']);
+          this.spinner.hide();
         }, error => {
+          this.spinner.hide();
           console.error('Failed to add post');
         });
   }
@@ -146,13 +153,15 @@ export class PostService extends BaseService {
       request = postData;
     }
 
-
+    this.spinner.show();
     this.http.put<{message: string}>(`${this.api_base_url}/posts/${id}`, request)
     .subscribe(res => {
       this.router.navigate(['/post']);
-      console.log(res);
+      // console.log(res);
+      this.spinner.hide();
     }, err => {
       console.error('Failed to update post');
+      this.spinner.hide();
     });
   }
 

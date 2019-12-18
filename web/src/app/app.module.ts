@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 import { PublicModule } from './public/public.module';
 import { MaterialDesignModule } from './material-design/material-design.module';
@@ -28,6 +29,7 @@ import { HeaderComponent } from './header/header.component';
     ReactiveFormsModule,
     HttpClientModule,
     MaterialDesignModule,
+    NgxSpinnerModule,
 
     PublicModule,
     SharedModule,

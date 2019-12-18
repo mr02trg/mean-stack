@@ -11,6 +11,7 @@ import { IUser } from 'src/app/models/users/IUser';
 import { AuthService } from 'src/app/services/auth.service';
 import { PostService } from '../../services/post.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-post-create',
@@ -24,7 +25,8 @@ export class PostCreateComponent implements OnInit {
     private postService: PostService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private snackBar: SnackbarService
+    private snackBar: SnackbarService,
+    private spinner: SpinnerService
   ) { 
     this.user = this.authService.user;
   }
@@ -132,14 +134,17 @@ export class PostCreateComponent implements OnInit {
 
   // load post by id
   private getPost(postId: string) {
+    this.spinner.show();
     this.postService.GetPostById(postId)
         .subscribe(res => {
           if (res) {
             this.post = res;
             this.setForm(res);
           }
+          this.spinner.hide();
         }, error => {
           console.error('Failed to fetch post');
+          this.spinner.hide();
         })
   }
 

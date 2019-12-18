@@ -5,10 +5,12 @@ import { map as rxMap } from 'rxjs/operators';
 
 import { IActivateUserRequest } from '../models/users/IActivateUserRequest';
 import { IUser } from '../models/users/IUser';
+
 import { AuthService } from './auth.service';
 import { ITokenRequest } from '../models/common/ITokenRequest';
 import { SnackbarService } from './snackbar.service';
 import { BaseService } from './base.service';
+import { SpinnerService } from './spinner.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +21,14 @@ export class UserService extends BaseService {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private snackBarService: SnackbarService
+    private snackBar: SnackbarService,
+    private spinner: SpinnerService
   ) { 
     super();
   }
 
   RegisterUser(request: IUser) {
+    this.spinner.show();
     this.http.post<{message: string, user: any}>(`${this.api_base_url}/users/register`, request)
         .pipe(
           rxMap((data) => {
@@ -35,13 +39,16 @@ export class UserService extends BaseService {
           })
         )
         .subscribe(res => {
+          this.spinner.hide();
           this.router.navigate(["/login"]);
         }, error => {
           console.error('Failed to add user');
+          this.spinner.hide();
         });
   }
 
   AuthenticateUser(request: IUser) {
+    this.spinner.show();
     this.http.post<{message: string, token: string, user: any}>(`${this.api_base_url}/users/authenticate`, request)
         .subscribe(res => {
           const authenticatedUser = <IUser> {
@@ -50,10 +57,12 @@ export class UserService extends BaseService {
           }
           this.authService.user = authenticatedUser;
           this.router.navigate(["/post"]);
+          this.spinner.hide();
         }, error => {
           console.log(error);
           console.error('Failed to authenticate');
-          this.snackBarService.show(error, 'Dismiss');
+          this.snackBar.show(error, 'Dismiss');
+          this.spinner.hide();
         });
   }
 

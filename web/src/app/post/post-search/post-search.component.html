@@ -10,17 +10,15 @@
             <app-tag [form]="form" placeholder="Search" [tags]="form.get('tags').value"></app-tag>
         </div>
         <div class="d-flex between">
-            <!-- <mat-form-field>
+            <mat-form-field>
                 <input matInput
                     class="date-picker"
                     formControlName="date"
                     placeholder="Choose a date range"
-                    [satDatepicker]="picker"
-                    [value]="date"
-                    (change)="onDateRangeSelect($event)">
+                    [satDatepicker]="picker">
                 <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
                 <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
-            </mat-form-field> -->
+            </mat-form-field>
             <div>
                 <button mat-raised-button color="primary" type="submit">Search</button>
                 <button class="gap" mat-button color="warn" (click)="onClear()">Clear</button>

@@ -5,7 +5,7 @@ import { IPostResponse } from 'src/app/models/posts/IPostResponse';
 
 import { PostService } from 'src/app/services/post.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
-
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-annoucement',
@@ -16,7 +16,8 @@ export class AnnoucementComponent implements OnInit {
 
   constructor(
     private postService: PostService,
-    private snackBar: SnackbarService
+    private snackBar: SnackbarService,
+    private spinner: SpinnerService
   ) { }
 
   pageData: IPostResponse;
@@ -37,11 +38,14 @@ export class AnnoucementComponent implements OnInit {
   }
 
   private loadData(pageIndex: number, pageSize: number) {
+    this.spinner.show();
     this.postService.GetAnnoucements(pageIndex, pageSize)
     .subscribe(success => {
       this.pageData = success;
+      this.spinner.hide();
     }, error => {
       this.snackBar.show('Failed to fetch announcements', 'Dismiss');
+      this.spinner.hide();
     })
   }
 }
