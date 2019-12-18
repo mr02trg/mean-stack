@@ -12,11 +12,11 @@ import { AnnoucementComponent } from './annoucement/annoucement.component';
 import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'activate/:token', component: ActivateComponent },
   { path: 'annoucement', component: AnnoucementComponent },
-  { path: 'about', component: AboutComponent },
+  { path: '', component: AboutComponent },
 ];
 
 @NgModule({

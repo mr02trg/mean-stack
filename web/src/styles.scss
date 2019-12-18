@@ -1,12 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import './assets/fonts/web-font.scss';
 
 // import saturn theme
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import '~saturn-datepicker/bundle.css';
 
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto }
 
 .d-flex {
     display: flex !important;

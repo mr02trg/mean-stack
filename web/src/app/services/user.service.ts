@@ -35,7 +35,7 @@ export class UserService extends BaseService {
           })
         )
         .subscribe(res => {
-          this.router.navigate(["/"]);
+          this.router.navigate(["/login"]);
         }, error => {
           console.error('Failed to add user');
         });

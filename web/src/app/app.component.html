@@ -1,4 +1,4 @@
 <app-header></app-header>
-<div class="view-container">
+<div [ngClass]="{'view-container': pagePadding}">
   <router-outlet></router-outlet>
 </div>
