@@ -1,9 +1,6 @@
-<div *ngIf="!show" class="search-button-wrapper">
-    <button mat-raised-button color="primary" (click)="show = !show">Search</button>
-</div>
 <mat-card *ngIf="show" class="search-card-wrapper">
     <div class="d-flex end">
-        <mat-icon style="cursor: pointer;" (click)="show = !show; onClear()">clear</mat-icon>
+        <mat-icon style="cursor: pointer;" (click)="show = !show; showChange.emit(show); onClear()">clear</mat-icon>
     </div>
     <form [formGroup]="form" (submit)="onSearch()">
         <div class="flex-grow-1 gap">

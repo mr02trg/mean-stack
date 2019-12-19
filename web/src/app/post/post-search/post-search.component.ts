@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -13,14 +13,18 @@ export class PostSearchComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) { }
 
-  show: boolean = false;
-
   form: FormGroup = this.fb.group({
     'tags': [[]],
     'date': [null],
   });
 
   subscription = new Subscription();
+
+  @Input()
+  show: boolean = false;
+
+  @Output()
+  showChange = new EventEmitter();
 
   @Output()
   search = new EventEmitter();

@@ -6,6 +6,11 @@
         margin-top: 15px;
     }
 
+    .button-area {
+        margin-bottom: 30px;
+        button { margin-right: 15px; }
+    }
+
     .accordion {
         .post-header::ng-deep {
             .mat-content {

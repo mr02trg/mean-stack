@@ -12,8 +12,17 @@
     </mat-card>
 </div>
 
+<div class="d-flex end button-area">
+    <div>
+        <button mat-raised-button color="primary" [routerLink]="['/post/create']" routerLinkActive="router-link-active" >Add Post</button>
+    </div>
+    <div *ngIf="pageData?.totalPosts > 0 && !showSearch" class="search-button-wrapper">
+        <button mat-raised-button color="primary" (click)="showSearch = !showSearch">Search</button>
+    </div>
+</div>
+
 <div *ngIf="pageData?.totalPosts > 0">
-    <app-post-search (search)="onSearch($event)"></app-post-search>
+    <app-post-search [(show)]="showSearch" (search)="onSearch($event)"></app-post-search>
     <mat-accordion class="accordion">
         <mat-expansion-panel *ngFor="let post of pageData?.posts" >
             <mat-expansion-panel-header class="post-header">

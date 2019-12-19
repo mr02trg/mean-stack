@@ -30,6 +30,7 @@ export class PostListComponent implements OnInit {
   pageSizeOptions: number[] = [1, 5, 10];
 
   search: IPostSearchRequest;
+  showSearch: boolean = false;
 
   ngOnInit() {
     this.postService.GetPosts(this.pageIndex, this.pageSize, this.search);
@@ -50,12 +51,12 @@ export class PostListComponent implements OnInit {
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    console.log(event);
+    // console.log(event);
     this.postService.GetPosts(this.pageIndex, this.pageSize, this.search);
   }
 
   onSearch(searchData: IPostSearchRequest) {
-    console.log(searchData);
+    // console.log(searchData);
     this.search = searchData;
     this.postService.GetPosts(this.pageIndex, this.pageSize, this.search)
   }

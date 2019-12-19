@@ -7,6 +7,13 @@
 </div>
 
 <div *ngIf="pageData?.totalPosts > 0">
+    <div class="pagination">
+        <mat-paginator [length]="pageData?.totalPosts"
+                    [pageIndex]="pageIndex"
+                    [pageSize]="pageSize"
+                    (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
     <mat-card class="card" *ngFor="let post of pageData?.posts">
         <mat-card-header class="card-header">
             <div mat-card-avatar class="admin-avatar"></div>
@@ -19,7 +26,6 @@
             </div>        
         </mat-card-content>
     </mat-card>
-    
     <div class="pagination">
         <mat-paginator [length]="pageData?.totalPosts"
                     [pageIndex]="pageIndex"

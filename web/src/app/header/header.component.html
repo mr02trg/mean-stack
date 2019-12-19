@@ -4,7 +4,6 @@
         <a mat-button routerLink="/">About</a>
         <a mat-button routerLink="/annoucement">Blog</a>
         <a *ngIf="isAuthenticated()" mat-button routerLink="/post">All Posts</a>
-        <a *ngIf="isAuthenticated()" mat-button routerLink="/post/create">Create Post</a>
         <span class="spacing"></span>
         <a *ngIf="isAuthenticated()" mat-button (click)="logout()">Logout</a>
         <a *ngIf="! isAuthenticated()" mat-button routerLink="/login">Login</a>
