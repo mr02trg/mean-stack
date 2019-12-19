@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forEach, remove } from 'lodash';
 import { ActivatedRoute } from '@angular/router';
+
+import { ComponentCanDeactivate } from 'src/app/guards/pending-changes.guard';
 
 import { IPost } from '../../models/posts/IPost';
 import { IDocument } from '../../models/posts/IDocument';
@@ -12,14 +14,14 @@ import { AuthService } from 'src/app/services/auth.service';
 import { PostService } from '../../services/post.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.scss']
 })
-export class PostCreateComponent implements OnInit {
-
+export class PostCreateComponent implements OnInit, ComponentCanDeactivate {
   constructor(
     private fb: FormBuilder,
     private postService: PostService,
@@ -55,6 +57,12 @@ export class PostCreateComponent implements OnInit {
         })
   }
 
+  // @HostListener allows us to also guard against browser refresh, close, etc.
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return ! (this.form.touched || this.form.dirty);
+  }
+
   onDocumentSelect(event: Event) {
     const fileList = (event.target as HTMLInputElement).files;
     forEach(fileList, file => this.files.push(file));
@@ -79,6 +87,10 @@ export class PostCreateComponent implements OnInit {
   }
 
   submit() {
+    // allow deactivate
+    this.form.markAsUntouched();
+    this.form.markAsPristine();
+
     if (this.postId) {
       this.updatePost();
     }
