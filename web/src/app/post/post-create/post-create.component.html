@@ -13,7 +13,7 @@
             <app-tag [form]="form" [tags]="form.get('tags').value"></app-tag>
 
             <div class="quill-editor">
-                <quill-editor [styles]="{'font-size': '120%'}" formControlName="content"></quill-editor>
+                <quill-editor [styles]="{'font-size': '120%', 'min-height': '300px'}" formControlName="content"></quill-editor>
             </div>
 
             <div>

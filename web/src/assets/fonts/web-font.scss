@@ -3,22 +3,37 @@
     src: url(/assets/fonts/Handlee-Regular.ttf) format('truetype'),
 }
 
-@font-face {
-    font-family: OpenSans;
-    src: url(/assets/fonts/OpenSans-Regular.ttf) format('truetype'),
-}
-
+// Montserrat family
 @font-face {
     font-family: Montserrat;
     src: url(/assets/fonts/Montserrat-Regular.ttf) format('truetype'),
 }
+@font-face {
+    font-family: MontserratSemiBold;
+    src: url(/assets/fonts/Montserrat-SemiBold.ttf) format('truetype'),
+}
+@font-face {
+    font-family: MontserratBold;
+    src: url(/assets/fonts/Montserrat-Bold.ttf) format('truetype'),
+}
 
+// Lato family
 @font-face {
     font-family: Lato;
     src: url(/assets/fonts/Lato-Regular.ttf) format('truetype'),
 }
+@font-face {
+    font-family: LatoBold;
+    src: url(/assets/fonts/Lato-Bold.ttf) format('truetype'),
+}
 
+
+// Roboto family
 @font-face {
     font-family: Roboto;
     src: url(/assets/fonts/Roboto-Regular.ttf) format('truetype'),
+}
+@font-face {
+    font-family: RobotoBold;
+    src: url(/assets/fonts/Roboto-Bold.ttf) format('truetype'),
 }

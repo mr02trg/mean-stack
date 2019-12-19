@@ -40,6 +40,7 @@ const routes: Routes = [
         toolbar: [
           [{ header: [2, 3, 4, false] }],
           [  { size: [ 'small', false, 'large', 'huge' ] }],
+          [{ 'color': [] }, { 'background': [] }],        
           ['bold', 'italic', 'underline', 'strike'],
           [{ 'align': [] }],
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
