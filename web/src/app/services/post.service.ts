@@ -6,10 +6,13 @@ import { map as rxMap } from 'rxjs/operators';
 import { map, forEach } from 'lodash';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
+import { MatDialog } from '@angular/material';
 
 import { BaseService } from './base.service';
 import { SpinnerService } from './spinner.service';
+import { SnackbarService } from './snackbar.service';
 
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { IPost } from '../models/posts/IPost';
 import { IPostResponse } from '../models/posts/IPostResponse';
 import { IPostSearchRequest } from '../models/posts/IPostSearchRequest';
@@ -21,7 +24,9 @@ export class PostService extends BaseService {
   constructor(
     private http: HttpClient,
     private router: Router, 
-    private spinner: SpinnerService
+    private spinner: SpinnerService,
+    private dialog: MatDialog,
+    private snackBar: SnackbarService
   ) {
     super();
   }
@@ -166,13 +171,21 @@ export class PostService extends BaseService {
   }
 
   DeletePost(id: string, pageIndex: number, pageSize: number) {
-    this.http.delete<{message: string}>(`${this.api_base_url}/posts/${id}`)
-    .subscribe(res => {
-      // reload
-      this.GetPosts(pageIndex, pageSize);
-    }, err => {
-      console.error('Failed to delete post');
-    });
+    const modalRef = this.dialog.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.title = "Delete Confirmation"
+    modalRef.componentInstance.content = "Are you sure you want to delete this post?"
+    modalRef.afterClosed().subscribe(x => {
+      if (x) {
+        this.http.delete<{message: string}>(`${this.api_base_url}/posts/${id}`)
+        .subscribe(res => {
+          this.snackBar.show('Post deleted successfully');
+          // reload
+          this.GetPosts(pageIndex, pageSize);
+        }, err => {
+          this.snackBar.show('Failed to delete post');
+        });
+      }
+    }, error => {});
   }
 
   DownloadPostDocument(id?: string, data?: any) {

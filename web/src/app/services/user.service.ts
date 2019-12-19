@@ -39,6 +39,7 @@ export class UserService extends BaseService {
           })
         )
         .subscribe(res => {
+          this.snackBar.show('Check your email for activation email');
           this.spinner.hide();
           this.router.navigate(["/login"]);
         }, error => {
@@ -59,8 +60,8 @@ export class UserService extends BaseService {
           this.router.navigate(["/post"]);
           this.spinner.hide();
         }, error => {
-          console.log(error);
-          console.error('Failed to authenticate');
+          // console.log(error);
+          // console.error('Failed to authenticate');
           this.snackBar.show(error, 'Dismiss');
           this.spinner.hide();
         });
