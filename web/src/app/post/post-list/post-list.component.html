@@ -28,10 +28,11 @@
             <mat-expansion-panel-header class="post-header">
                 <mat-panel-title>{{post.title}}</mat-panel-title>
                 <mat-panel-description>
-                    <mat-chip-list class="tags">
-                        <mat-chip *ngFor="let tag of post.tags | slice:0:3">{{tag}}</mat-chip>   
-                        <mat-chip *ngIf="post.tags.length > 3" >...</mat-chip>   
+                    <mat-chip-list *ngIf="post.tags.length > 0" class="tags">
+                        <mat-chip>{{post.tags[0]}}</mat-chip>   
+                        <mat-chip *ngIf="post.tags.length > 1" [matTooltip]="getTagListString(post)" >...</mat-chip>   
                     </mat-chip-list>
+                    <span class="post-date">{{post.createdDate | date}}</span>
                 </mat-panel-description>
             </mat-expansion-panel-header>            
 

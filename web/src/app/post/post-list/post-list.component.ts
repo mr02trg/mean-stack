@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material';
+import { join, slice } from 'lodash';
 
 import { PostService } from '../../services/post.service';
 import { IPostResponse } from '../../models/posts/IPostResponse';
 import { AuthService } from '../../services/auth.service';
 import { IPostSearchRequest } from 'src/app/models/posts/IPostSearchRequest';
+import { IPost } from 'src/app/models/posts/IPost';
 
 @Component({
   selector: 'app-post-list',
@@ -59,6 +61,13 @@ export class PostListComponent implements OnInit {
     // console.log(searchData);
     this.search = searchData;
     this.postService.GetPosts(this.pageIndex, this.pageSize, this.search)
+  }
+
+  getTagListString(post: IPost) {
+    if (post && post.tags && post.tags.length > 1) {
+      return join(slice(post.tags, 1), ', ');
+    }
+    return '';
   }
 
   isAuthenticated() {
